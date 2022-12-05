@@ -47,7 +47,7 @@ class SendRequestHoursCommand extends Command
             
             $user = User::select('name', 'email')->whereId($user_id)->first();
 
-            Mail::to(config('mail.to.address'))->send(new HoursRequest($user, $additional_hours));
+            Mail::to(config('mail.to.address'))->cc($user->email)->send(new HoursRequest($user, $additional_hours));
 
             AdditionalHour::whereIn('id', $additional_hours->pluck('id')->toArray())->update(['status_id' => $status->id]);
 
