@@ -8,6 +8,7 @@
     import TextInput from '@/Components/TextInput.vue';
     import Select from '@/Components/Select.vue';
     import Trans from '@/Services/Trans';
+    import { Breadcrumb, BreadcrumbItem } from 'flowbite-vue';
 
 
     export default {
@@ -35,15 +36,17 @@
         },
 
         components: {
-            Head,
-            AuthenticatedLayout,
-            Link,
-            InputError,
-            InputLabel,
-            PrimaryButton,
-            TextInput,
-            Select
-        },
+    Head,
+    AuthenticatedLayout,
+    Link,
+    InputError,
+    InputLabel,
+    PrimaryButton,
+    TextInput,
+    Select,
+    Breadcrumb,
+    BreadcrumbItem
+},
 
         computed: {
             statusesOptions() {
@@ -69,9 +72,17 @@
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <Link :href="route('hours.index')">Hours</Link> / #{{ additionalHour.id }} / Edit 
-            </h2>
+            <Breadcrumb>
+                <BreadcrumbItem :href="route('hours.index')" home >
+                    Hours
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    #{{ additionalHour.id }}
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    Edit
+                </BreadcrumbItem>
+            </Breadcrumb>
         </template>
 
         <div class="py-12">

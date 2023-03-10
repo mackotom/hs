@@ -5,6 +5,7 @@
     import WorkSvg from '@/Components/Svgs/WorkSvg.vue';
     import ActionBar from './Partials/ActionBar.vue'
     import Trans from '@/Services/Trans';
+    import { Breadcrumb, BreadcrumbItem } from 'flowbite-vue';
 
 
     export default {
@@ -15,12 +16,14 @@
         },
 
         components: {
-            Head,
-            TrHour,
-            AuthenticatedLayout,
-            WorkSvg,
-            ActionBar
-        },
+    Head,
+    TrHour,
+    AuthenticatedLayout,
+    WorkSvg,
+    ActionBar,
+    Breadcrumb,
+    BreadcrumbItem
+},
 
         methods : {
             hoursIsEmpty () {
@@ -63,7 +66,14 @@
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Hours</h2>
+            <Breadcrumb>
+                <BreadcrumbItem :href="route('hours.index')" home >
+                    Hours
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    List
+                </BreadcrumbItem>
+            </Breadcrumb>
         </template>
 
         <div class="py-2">
