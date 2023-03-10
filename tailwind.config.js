@@ -11,6 +11,18 @@ module.exports = {
         'node_modules/flowbite/**/*.{js,jsx,ts,tsx}'
     ],
 
+    safelist: [
+        'bg-indigo-800',
+        'bg-indigo-500',
+        'text-indigo-100',
+        'bg-emerald-800',
+        'bg-emerald-500',
+        'text-emerald-100',
+        'bg-red-800',
+        'bg-red-500',
+        'text-red-100'
+    ],
+
     theme: {
         extend: {
             fontFamily: {

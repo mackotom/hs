@@ -62,7 +62,11 @@ class AdditionalHourController extends Controller
         $additional_hour->status()->associate(AdditionalHourStatus::find($request->validated('status')));
         $additional_hour->user()->associate(auth()->user());
 
-        $additional_hour->save();
+        if($additional_hour->save()) {
+            session()->flash('alert', ['type' => 'success', 'message' => 'New Hour added']);
+        }
+
+
 
         return Redirect::route('hours.index');
 
@@ -107,7 +111,10 @@ class AdditionalHourController extends Controller
         $additional_hour->hours = $request->validated('hours');
         $additional_hour->date = $request->validated('date');
         $additional_hour->status()->associate(AdditionalHourStatus::find($request->validated('status')));
-        $additional_hour->save();
+        
+        if($additional_hour->save()) {
+            session()->flash('alert', ['type' => 'success', 'message' => "Hour #{$additional_hour->id} has been updated"]);
+        }
 
         return Redirect::route('hours.index');
 
