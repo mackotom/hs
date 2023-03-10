@@ -62,7 +62,11 @@ class AdditionalHourController extends Controller
         $additional_hour->status()->associate(AdditionalHourStatus::find($request->validated('status')));
         $additional_hour->user()->associate(auth()->user());
 
-        $additional_hour->save();
+        if($additional_hour->save()) {
+            session()->flash('alert', ['type' => 'success', 'message' => 'New Hour added']);
+        }
+
+
 
         return Redirect::route('hours.index');
 
@@ -86,9 +90,12 @@ class AdditionalHourController extends Controller
      * @param  \App\Models\AdditionalHour  $additionalHour
      * @return \Illuminate\Http\Response
      */
-    public function edit(AdditionalHour $additionalHour)
+    public function edit(AdditionalHour $additional_hour)
     {
-        //
+        return Inertia::render('Hours/EditHour', [
+            'additionalHour' => $additional_hour,
+            'statuses' => AdditionalHourStatus::all()
+        ]);
     }
 
     /**
@@ -98,9 +105,19 @@ class AdditionalHourController extends Controller
      * @param  \App\Models\AdditionalHour  $additionalHour
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAdditionalHourRequest $request, AdditionalHour $additionalHour)
+    public function update(UpdateAdditionalHourRequest $request, AdditionalHour $additional_hour)
     {
-        //
+        $additional_hour->reason = $request->validated('reason');
+        $additional_hour->hours = $request->validated('hours');
+        $additional_hour->date = $request->validated('date');
+        $additional_hour->status()->associate(AdditionalHourStatus::find($request->validated('status')));
+        
+        if($additional_hour->save()) {
+            session()->flash('alert', ['type' => 'success', 'message' => "Hour #{$additional_hour->id} has been updated"]);
+        }
+
+        return Redirect::route('hours.index');
+
     }
 
     /**

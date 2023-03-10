@@ -1,6 +1,6 @@
 <script>
 
-    import { useForm } from '@inertiajs/inertia-vue3'
+    import { useForm, Link } from '@inertiajs/inertia-vue3'
     import { Badge } from 'flowbite-vue'
     import dayjs from 'dayjs'
 
@@ -14,12 +14,8 @@
             function deleteHour(id) {
                 form.delete(route('hours.delete', {additional_hour: id}))
             }
-
-            function editHour() {
-
-            }
             
-            return { form, deleteHour, editHour }
+            return { form, deleteHour }
 
         }, 
 
@@ -29,7 +25,8 @@
 
 
         components: {
-            Badge
+            Badge,
+            Link
         },
 
 
@@ -64,12 +61,20 @@
         <td class="py-4 px-6">
             {{ createdAtToString }}
         </td>
-        <td class="py-4 px-6 text-right">
-            <form @submit.prevent="deleteHour(hour.id)">
-                <button class="font-medium text-red-600 dark:text-red-500 hover:underline" :disabled="form.processing" >
-                    Delete
-                </button>
-            </form>
+        <td class="py-4 px-6 h-0">
+            <div class="flex justify-end space-x-4">
+                <div>
+                    <Link :href="route('hours.edit', hour.id)">Edit</Link>
+                </div>
+
+                <div>
+                    <form @submit.prevent="deleteHour(hour.id)">
+                        <button class="font-medium text-red-600 dark:text-red-500 hover:underline" :disabled="form.processing" >
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
         </td>
     </tr>
 

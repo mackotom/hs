@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::group(['prefix' => '{additional_hour}'], function() {
 
             Route::get('/edit', [AdditionalHourController::class, 'edit'])->name('hours.edit');
-            Route::patch('', [AdditionalHourController::class, 'update'])->name('hours.update');
+            Route::put('', [AdditionalHourController::class, 'update'])->name('hours.update');
             Route::delete('', [AdditionalHourController::class, 'destroy'])->name('hours.delete');
 
         });
