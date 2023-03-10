@@ -7,33 +7,31 @@
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import TextInput from '@/Components/TextInput.vue';
     import Select from '@/Components/Select.vue';
-    import dayjs from 'dayjs'
     import Trans from '@/Services/Trans';
 
 
     export default {
 
-        setup () {
+        setup (props) {
 
             const form = useForm({
-                reason: '',
-                hours: 1,
-                status: 1,
-                date: dayjs().format('YYYY-MM-DD'),
+                reason: props.additionalHour.reason,
+                hours: props.additionalHour.hours,
+                status: props.additionalHour.status_id,
+                date: props.additionalHour.date,
             })
 
-
             function submit() {
-                form.post(route('hours.store'))
+                form.put(route('hours.update', props.additionalHour.id))
             }
-
 
             return {form, submit}
 
         },
 
         props: {
-            statuses: Array
+            statuses: Array,
+            additionalHour: Object,
         },
 
         components: {
@@ -72,7 +70,7 @@
 
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <Link :href="route('hours.index')">Hours</Link> / Add
+                <Link :href="route('hours.index')">Hours</Link> / #{{ additionalHour.id }} / Edit 
             </h2>
         </template>
 
@@ -140,7 +138,7 @@
 
                         <div class="flex items-center mt-4">
                             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                Add
+                                Edit
                             </PrimaryButton>
                         </div>
 
