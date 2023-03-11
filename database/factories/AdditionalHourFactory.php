@@ -17,7 +17,9 @@ class AdditionalHourFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'reason' => fake()->sentence(),
+            'date' => fake()->date(),
+            'hours' => fake()->numberBetween(1,100)
         ];
     }
 }
