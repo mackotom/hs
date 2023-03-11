@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreAdditionalHourRequest;
 use App\Http\Requests\UpdateAdditionalHourRequest;
+use App\Http\Requests\UpdateBulkAdditionalHourRequest;
 use App\Models\AdditionalHour;
 use App\Models\AdditionalHourStatus;
 use Illuminate\Database\Eloquent\Builder;
@@ -132,4 +133,33 @@ class AdditionalHourController extends Controller
 
         return Redirect::back();
     }
+
+    /**
+     * Update multi hours in same times
+     *
+     * @param UpdateBulkAdditionalHourRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateBulk(UpdateBulkAdditionalHourRequest $request) {
+
+        $query = [];
+
+        if($request->filled('status')) {
+            $query['status_id'] = $request->status; 
+        }
+
+        if($request->filled('date')) {
+            $query['date'] = $request->date;
+        }
+
+        if(count($query) <= 0) {
+            session()->flash('alert', ['type' => 'info', 'message' => "No new value"]);
+        }elseif (AdditionalHour::whereIn('id', $request->hours)->update($query)) {
+            session()->flash('alert', ['type' => 'success', 'message' => "Hours Updated"]);
+        }
+
+        return Redirect::route('hours.index');
+
+    }
+
 }

@@ -8,7 +8,7 @@
     import TextInput from '@/Components/TextInput.vue';
     import Select from '@/Components/Select.vue';
     import dayjs from 'dayjs'
-    import Trans from '@/Services/Trans';
+    import HourStatus from '@/Services/HourStatus';
     import { Breadcrumb, BreadcrumbItem } from 'flowbite-vue';
 
 
@@ -38,27 +38,21 @@
         },
 
         components: {
-    Head,
-    AuthenticatedLayout,
-    Link,
-    InputError,
-    InputLabel,
-    PrimaryButton,
-    TextInput,
-    Select,
-    Breadcrumb,
-    BreadcrumbItem
-},
+            Head,
+            AuthenticatedLayout,
+            Link,
+            InputError,
+            InputLabel,
+            PrimaryButton,
+            TextInput,
+            Select,
+            Breadcrumb,
+            BreadcrumbItem
+        },
 
         computed: {
             statusesOptions() {
-                return this.statuses.map(function(el) { 
-                    return {
-                        value: el.id,
-                        label: new Trans().getTypes()[el.code],
-                        selected: el.code === 'requested' ? true : false
-                    }
-                } )
+                return new HourStatus().getStatusesOptions(this.statuses)
             }
         }
 

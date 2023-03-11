@@ -4,8 +4,9 @@
     import TrHour from './Partials/TrHour.vue';
     import WorkSvg from '@/Components/Svgs/WorkSvg.vue';
     import ActionBar from './Partials/ActionBar.vue'
-    import Trans from '@/Services/Trans';
     import { Breadcrumb, BreadcrumbItem } from 'flowbite-vue';
+    import ActionBarMulti from './Partials/ActionBarMulti.vue';
+    import HourStatus from '@/Services/HourStatus';
 
 
     export default {
@@ -16,40 +17,65 @@
         },
 
         components: {
-    Head,
-    TrHour,
-    AuthenticatedLayout,
-    WorkSvg,
-    ActionBar,
-    Breadcrumb,
-    BreadcrumbItem
-},
+            Head,
+            TrHour,
+            AuthenticatedLayout,
+            WorkSvg,
+            ActionBar,
+            Breadcrumb,
+            BreadcrumbItem,
+            ActionBarMulti
+        },
+
+        data() {
+            return {}
+        },
+
 
         methods : {
+
+            /**
+             * Determine if have hours or not
+             */
             hoursIsEmpty () {
                 return this.hours.length <= 0
+            },
+
+            /**
+             * Handle select all checkbox
+             */
+            selectAll() {
+                const is_selected = this.allSelected
+                this.hours.forEach(hour => hour.selected = !is_selected)
+
             }
+
         },
 
 
         computed : {
-            statusesOptions() {
-                const filters = this.statuses.map(function(el) { 
-                    return {
-                        value: el.code,
-                        label: new Trans().getTypes()[el.code],
-                        selected: el.code === 'requested' ? true : false
-                    }
-                })
 
-                filters.unshift({
-                    value: 'all',
-                    label: 'All'
-                })
+            /**
+             * Get Select options for filter bar
+             */
+            statusesFilterOptions() {
+                return new HourStatus().getStatusesFilterOptions(this.statuses);
+            },
 
-                return filters
+            /**
+             * Determine if all entries are selected
+             */
+            allSelected() {
+                return this.hours.every(hour => hour.selected)
+            },
 
+            /**
+             * Return only selected hours
+             */
+            hoursSelected() {
+                return this.hours.filter(hour => hour.selected)
             }
+
         }
 
     }
@@ -80,7 +106,9 @@
 
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-                <ActionBar :statuses="statusesOptions" />
+                <ActionBar :statuses="statusesFilterOptions" />
+
+                <ActionBarMulti :show="true" :statuses="statuses" :hours-selected="hoursSelected"/>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     
@@ -89,6 +117,9 @@
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="py-3 px-6">
+                                        <input type="checkbox" value="checkall" name="tablecheckall" :checked="allSelected" @click="selectAll"/>
+                                    </th>
+                                    <th scope="col" class="py-3 px-6">
                                         #
                                     </th>
                                     <th scope="col" class="py-3 px-6">
@@ -96,20 +127,14 @@
                                             Reason
                                         </div>
                                     </th>
-                                    <th scope="col" class="py-3 px-6">
-                                        <div class="flex items-center">
-                                            Hours
-                                        </div>
+                                    <th scope="col" class="py-3 px-6 text-center">
+                                        Hours
                                     </th>
-                                    <th scope="col" class="py-3 px-6">
-                                        <div class="flex items-center">
-                                            Status
-                                        </div>
+                                    <th scope="col" class="py-3 px-6 text-center">
+                                        Status
                                     </th>
-                                    <th scope="col" class="py-3 px-6">
-                                        <div class="flex items-center">
-                                            Date
-                                        </div>
+                                    <th scope="col" class="py-3 px-6 text-center">
+                                        Date
                                     </th>
                                     <th scope="col" class="py-3 px-6">
                                         <span class="sr-only">Edit</span>
@@ -117,7 +142,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <TrHour v-for="hour in hours" :hour="hour"/>
+                                <TrHour v-for="hour in hours" :hour="hour" :checked="allSelected"/>
                             </tbody>
                         </table>
                     </div>
