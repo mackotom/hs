@@ -149,7 +149,9 @@
 
                     <div class="flex flex-col m-4" v-else>
                         <div class="flex justify-center"><WorkSvg class="max-w-xs h-auto"/></div>
-                        <div class="flex justify-center mt-4">No Additional Hour Found</div>
+                        <div class="flex justify-center mt-4">
+                            <h2>No Additional Hour Found</h2>
+                        </div>
                     </div>
 
 
