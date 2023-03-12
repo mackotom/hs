@@ -17,10 +17,11 @@
             
             return { form, deleteHour }
 
-        }, 
+        },
 
         props: {
-            hour: Object
+            hour: Object,
+            checked: Boolean
         },
 
 
@@ -29,12 +30,19 @@
             Link
         },
 
+        data() {
+            return {
+                selectedHours: []
+            }
+        },
+
 
         computed: {
             createdAtToString () {
                 return dayjs(this.hour.date).format('DD/MM/YYYY')
             }
-        }
+        },
+
 
     }
 
@@ -46,19 +54,22 @@
 <template>
 
     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <td scope="row" class="py-4 px-6">
+            <input type="checkbox" :value="hour.id" name="table-checkbox" v-model="hour.selected"/>
+        </td>
         <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             {{ hour.id }}
         </th>
         <td class="py-4 px-6">
             {{ hour.reason }}
         </td>
-        <td class="py-4 px-6">
+        <td class="py-4 px-6 text-center">
             {{ hour.hours }}
         </td>
-        <td class="py-4 px-6">
+        <td class="py-4 px-6 text-center">
             <Badge :type="hour.status.color">{{ hour.status.code }}</Badge>
         </td>
-        <td class="py-4 px-6">
+        <td class="py-4 px-6 text-center">
             {{ createdAtToString }}
         </td>
         <td class="py-4 px-6 h-0">

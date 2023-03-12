@@ -3,8 +3,6 @@
 use App\Http\Controllers\AdditionalHourContactController;
 use App\Http\Controllers\AdditionalHourController;
 use App\Http\Controllers\ProfileController;
-use App\Models\AdditionalHourContact;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -39,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('', [AdditionalHourController::class, 'index'])->name('hours.index');
         Route::get('/create', [AdditionalHourController::class, 'create'])->name('hours.create');
         Route::post('', [AdditionalHourController::class, 'store'])->name('hours.store');
+        Route::post('/bulk', [AdditionalHourController::class, 'updateBulk'])->name('hours.update.bulk');
         
         Route::group(['prefix' => '{additional_hour}'], function() {
 

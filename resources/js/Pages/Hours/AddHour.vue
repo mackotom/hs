@@ -8,7 +8,8 @@
     import TextInput from '@/Components/TextInput.vue';
     import Select from '@/Components/Select.vue';
     import dayjs from 'dayjs'
-    import Trans from '@/Services/Trans';
+    import HourStatus from '@/Services/HourStatus';
+    import { Breadcrumb, BreadcrumbItem } from 'flowbite-vue';
 
 
     export default {
@@ -44,18 +45,14 @@
             InputLabel,
             PrimaryButton,
             TextInput,
-            Select
+            Select,
+            Breadcrumb,
+            BreadcrumbItem
         },
 
         computed: {
             statusesOptions() {
-                return this.statuses.map(function(el) { 
-                    return {
-                        value: el.id,
-                        label: new Trans().getTypes()[el.code],
-                        selected: el.code === 'requested' ? true : false
-                    }
-                } )
+                return new HourStatus().getStatusesOptions(this.statuses)
             }
         }
 
@@ -71,9 +68,14 @@
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <Link :href="route('hours.index')">Hours</Link> / Add
-            </h2>
+            <Breadcrumb>
+                <BreadcrumbItem :href="route('hours.index')" home >
+                    Hours
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    Add
+                </BreadcrumbItem>
+            </Breadcrumb>
         </template>
 
         <div class="py-12">

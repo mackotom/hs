@@ -5,9 +5,11 @@
     import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
+    import DangerButton from '@/Components/DangerButton.vue';
     import TextInput from '@/Components/TextInput.vue';
     import Select from '@/Components/Select.vue';
-    import Trans from '@/Services/Trans';
+    import HourStatus from '@/Services/HourStatus';
+    import { Breadcrumb, BreadcrumbItem } from 'flowbite-vue';
 
 
     export default {
@@ -42,18 +44,26 @@
             InputLabel,
             PrimaryButton,
             TextInput,
-            Select
+            Select,
+            Breadcrumb,
+            BreadcrumbItem,
+            DangerButton,
+        },
+
+        methods: {
+
+            /**
+             * Redirect user to home page
+             */
+            cancel() {
+                this.$inertia.visit(route('hours.index'))
+            }
+
         },
 
         computed: {
             statusesOptions() {
-                return this.statuses.map(function(el) { 
-                    return {
-                        value: el.id,
-                        label: new Trans().getTypes()[el.code],
-                        selected: el.code === 'requested' ? true : false
-                    }
-                } )
+                return new HourStatus().getStatusesOptions(this.statuses)
             }
         }
 
@@ -69,9 +79,17 @@
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <Link :href="route('hours.index')">Hours</Link> / #{{ additionalHour.id }} / Edit 
-            </h2>
+            <Breadcrumb>
+                <BreadcrumbItem :href="route('hours.index')" home >
+                    Hours
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    #{{ additionalHour.id }}
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    Edit
+                </BreadcrumbItem>
+            </Breadcrumb>
         </template>
 
         <div class="py-12">
@@ -136,10 +154,18 @@
                             <InputError class="mt-2" :message="form.errors.status" />
                         </div>
 
-                        <div class="flex items-center mt-4">
-                            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                Edit
-                            </PrimaryButton>
+                        <div class="flex flex-row justify-between mt-4">
+                            <div>
+                                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                    Edit
+                                </PrimaryButton>
+                            </div>
+                            <div></div>
+                            <div>
+                                <DangerButton @click="cancel" type="button" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                    Cancel
+                                </DangerButton>
+                            </div>
                         </div>
 
                     </form>
