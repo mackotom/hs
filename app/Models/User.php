@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,9 +44,33 @@ class User extends Authenticatable
     ];
 
 
-
-    public function additionalHours() {
+    /**
+     * Return all hours of user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function additionalHours() : HasMany {
         return $this->hasMany(AdditionalHour::class);
     }
+
+    /**
+     * Return all contact to send mail
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function additionalHourContact() : HasMany {
+        return $this->hasMany(AdditionalHourContact::class);
+    }
+
+    /**
+     * Return the default contact hour
+     *
+     * @return additionalHourContact|null
+     */
+    public function additionalHourContactDefault() : additionalHourContact|null {
+        return $this->additionalHourContact()->default()->first();
+    }
+
+
 
 }

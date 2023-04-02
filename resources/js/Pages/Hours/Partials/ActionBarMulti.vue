@@ -72,7 +72,7 @@
 
 <template>
 
-    <nav class="bg-gray-50 dark:bg-gray-700 shadow-md sm:rounded-lg my-4" v-if="countSelectedHours > 0">
+    <nav class="bg-white dark:bg-gray-700 shadow sm:rounded-lg my-4" v-if="countSelectedHours > 0">
         <div class="max-w-screen-xl px-4 py-3 mx-auto md:px-6">
             <div class="flex flex-row items-center">
                 <ul class="flex flex-row mt-0 mr-6 space-x-8 text-sm font-medium">
