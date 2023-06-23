@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AdditionalHourContact;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,6 +20,8 @@ class HoursRequest extends Mailable
 
     private Collection $additional_hours;
 
+    private AdditionalHourContact $contact;
+
     private int $numberHours = 0;
 
     /**
@@ -26,11 +29,12 @@ class HoursRequest extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, Collection $additional_hours)
+    public function __construct(User $user, Collection $additional_hours, AdditionalHourContact $contact)
     {
         $this->user = $user;
         $this->additional_hours = $additional_hours;
         $this->numberHours = $additional_hours->sum('hours');
+        $this->contact = $contact;
 
 
     }
@@ -43,8 +47,11 @@ class HoursRequest extends Mailable
     public function envelope()
     {
         return new Envelope(
+            to: [$this->contact->email],
             from: $this->user->email,
             subject: trans_choice('mail.requestHours.subject', $this->numberHours),
+            cc: [$this->user->email],
+            bcc: [$this->user->email]
         );
     }
 
@@ -60,7 +67,8 @@ class HoursRequest extends Mailable
             with: [
                 'username' => $this->user->name,
                 'additional_hours' => $this->additional_hours,
-                'numberHours' => $this->numberHours
+                'numberHours' => $this->numberHours,
+                'contact' => $this->contact
             ]
         );
     }

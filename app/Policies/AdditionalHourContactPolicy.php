@@ -10,16 +10,6 @@ class AdditionalHourContactPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
 
     /**
      * Determine whether the user can view the model.
@@ -30,7 +20,7 @@ class AdditionalHourContactPolicy
      */
     public function view(User $user, AdditionalHourContact $additionalHourContact)
     {
-        //
+        return $user->id === $additionalHourContact->user_id;
     }
 
     /**
@@ -41,7 +31,7 @@ class AdditionalHourContactPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,42 +43,11 @@ class AdditionalHourContactPolicy
      */
     public function update(User $user, AdditionalHourContact $additionalHourContact)
     {
-        //
+        
+        return $user->id === $additionalHourContact->user_id;
+
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\AdditionalHourContact  $additionalHourContact
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function delete(User $user, AdditionalHourContact $additionalHourContact)
-    {
-        //
-    }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\AdditionalHourContact  $additionalHourContact
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function restore(User $user, AdditionalHourContact $additionalHourContact)
-    {
-        //
-    }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\AdditionalHourContact  $additionalHourContact
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function forceDelete(User $user, AdditionalHourContact $additionalHourContact)
-    {
-        //
-    }
 }

@@ -4,10 +4,13 @@ namespace App\Console\Commands;
 
 use App\Mail\HoursRequest;
 use App\Models\AdditionalHour;
+use App\Models\AdditionalHourContact;
 use App\Models\AdditionalHourStatus;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class SendRequestHoursCommand extends Command
@@ -26,6 +29,7 @@ class SendRequestHoursCommand extends Command
      */
     protected $description = 'Send Mail to request additionals hours';
 
+
     /**
      * Execute the console command.
      *
@@ -34,25 +38,53 @@ class SendRequestHoursCommand extends Command
     public function handle()
     {
 
-        $status = AdditionalHourStatus::whereCode('request_sended')->first();
+        $status_sended = AdditionalHourStatus::whereCode('request_sended')->first();
 
-        $query = AdditionalHour::whereHas('status', function(Builder $query) {
-            $query->whereCode('requested');
-        })->get();
+        $day = Carbon::now()->day;
 
+        $additional_hour_contacts = AdditionalHourContact::whereSendAt($day)->default()->with([
+            'user' => function($query) {
+                return $query->with(['additionalHours' => function($query) {
+                    $query->whereHas('status', function($query) {
+                        $query->whereCode('requested');
+                    });
+                }]);
+            }
+        ])->get();
 
-        $grouped = $query->groupBy('user_id');
+        foreach($additional_hour_contacts as $additional_hour_contact) {
 
-        foreach($grouped as $user_id => $additional_hours) {
+            $user = $additional_hour_contact->user;
+
+            if($user && $user->additionalHours->count() > 0) {
+
+                $this->sendSummaryUserEmail($additional_hour_contact, $user, $user->additionalHours, $status_sended);
             
-            $user = User::select('name', 'email')->whereId($user_id)->first();
+            }
 
-            Mail::to(config('mail.to.address'))->cc($user->email)->send(new HoursRequest($user, $additional_hours));
-
-            AdditionalHour::whereIn('id', $additional_hours->pluck('id')->toArray())->update(['status_id' => $status->id]);
 
         }
 
         return Command::SUCCESS;
+    }
+
+
+    /**
+     * Send the summary mail to the contact user
+     *
+     * @param AdditionalHourContact $contact
+     * @param User $user
+     * @param Collection $additional_hours
+     * @param AdditionalHourStatus $status_sended
+     * @return boolean
+     */
+    protected function sendSummaryUserEmail(AdditionalHourContact $contact, User $user, Collection $additional_hours, AdditionalHourStatus $status_sended) : bool {
+
+        Mail::send(new HoursRequest($user, $additional_hours, $contact));
+
+        AdditionalHour::whereIn('id', $additional_hours->pluck('id')->toArray())->update(['status_id' => $status_sended->id]);
+
+        return true;
+
     }
 }

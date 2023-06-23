@@ -13,7 +13,7 @@ class StoreAdditionalHourContactRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,25 @@ class StoreAdditionalHourContactRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'firstname' => [
+                'required',
+                'string'
+            ],
+            'lastname' => [
+                'required',
+                'string'
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email'
+            ],
+            'send_at' => [
+                'required',
+                'integer',
+                'max:28',
+                'min:1'
+            ]
         ];
     }
 }

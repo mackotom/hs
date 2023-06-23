@@ -23,10 +23,15 @@ export default {
 
     components: { SwitchTab },
 
-    data () {
-        return {
-            activeTab: 'profile'
+    props: {
+        activeTab: {
+            type: String,
+            default: 'profile'
         }
+    },
+
+    data () {
+        return {}
     },
 
     computed: {

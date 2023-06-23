@@ -17,7 +17,11 @@ class AdditionalHourContactFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
+            'email' => fake()->safeEmail(),
+            'send_at' => rand(1,28),
+            'default' => true,
         ];
     }
 }

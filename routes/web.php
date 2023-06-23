@@ -3,7 +3,6 @@
 use App\Http\Controllers\AdditionalHourContactController;
 use App\Http\Controllers\AdditionalHourController;
 use App\Http\Controllers\ProfileController;
-use App\Models\AdditionalHourContact;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,17 +27,18 @@ Route::get('/dashboard', function () {
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'user.hascontact'])->group(function () {
     
     Route::group(['prefix' => '/profile'], function() {
         Route::get('', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-        Route::group(['prefix' => '/contact'], function() {
+        Route::group(['prefix' => '/contact'], function(){
 
-            Route::get('', [AdditionalHourContact::class, 'edit'])->name('profile.contact.edit');
-
+            Route::get('', [AdditionalHourContactController::class, 'edit'])->name('profile.contact.edit');
+            Route::post('', [AdditionalHourContactController::class, 'store'])->name('profile.contact.store');
+    
         });
 
     });
@@ -56,19 +56,6 @@ Route::middleware('auth')->group(function () {
             Route::put('', [AdditionalHourController::class, 'update'])->name('hours.update');
             Route::delete('', [AdditionalHourController::class, 'destroy'])->name('hours.delete');
 
-        });
-
-    });
-
-    Route::group(['prefix' => '/contact'], function(){
-
-        Route::get('/create', [AdditionalHourContactController::class, 'create'])->name('contact.create');
-        Route::post('', [AdditionalHourContactController::class, 'store'])->name('contact.store');
-
-        Route::group(['prefix' => '{contact}'], function() {
-            Route::get('/edit', [AdditionalHourContactController::class, 'edit'])->name('contact.edit');
-            Route::delete('', [AdditionalHourContactController::class, 'delete'])->name('contact.delete');
-            Route::patch('', [AdditionalHourContactController::class, 'update'])->name('contact.update');
         });
 
     });

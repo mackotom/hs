@@ -1,5 +1,5 @@
 <x-mail::message>
-# {{ __('mail.hello') }},
+# {{ __('mail.hello') }} {{ $contact->firstname }},
 
 {{ trans_choice('mail.requestHours.info', $numberHours, ['numberHours' => $numberHours]) }}.
 

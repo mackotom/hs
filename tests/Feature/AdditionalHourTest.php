@@ -195,7 +195,38 @@ class AdditionalHourTest extends TestCase
 
     }
 
-    public function test_delete_hour() {}
+    /**
+     * Delete test
+     *
+     * @group hours
+     * @return void
+     */
+    public function test_delete_hour() {
+
+        $this->seed(AdditionalHourStatusSeeder::class);
+
+        $status = AdditionalHourStatus::whereCode('requested')->first();
+
+        $user = User::factory()->create();
+        
+        $hours = AdditionalHour::factory()
+            ->count(5)
+            ->for($user)
+            ->for($status, 'status')
+            ->create();
+
+        $hour_to_delete = $hours->random();
+
+        $response = $this->actingAs($user)->delete(route('hours.delete', [
+            'additional_hour' => $hour_to_delete->id
+        ]));
+
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseMissing('additional_hours', ['id' => $hour_to_delete->id]);
+        
+
+    }
 
 
 }
